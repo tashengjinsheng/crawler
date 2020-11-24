@@ -2,6 +2,7 @@ import os
 import requests
 import urllib
 from urllib.request import urlopen
+from tqdm import tqdm
 from bs4 import BeautifulSoup
 
 
@@ -19,11 +20,13 @@ def get_all_urls_in_one_page(url):
 if __name__ == '__main__':
     url = 'https://hub.baai.ac.cn/view/4155'
     all_urls = get_all_urls_in_one_page(url)
+    print("all url size: ", len(all_urls))
     pdf_urls = [u for u in all_urls if u.endswith('pdf')]
+    print("all pdf url size: ", len(pdf_urls))
     if not os.path.exists('download_pdfs'):
         os.mkdir('download_pdfs')
     save_file = 'download_pdfs' + '/' 
-    for i, suburl in enumerate(pdf_urls):
+    for i, suburl in tqdm(enumerate(pdf_urls)):
         with open(save_file+str(i)+'.pdf', 'wb') as f:
             r = urllib.request.urlopen(suburl)
             block_sz = 8192
